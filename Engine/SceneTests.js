@@ -37,10 +37,13 @@ function OrbitTest(e) {
   e.add({x: vec2(8, 4), v: vec2(0, 6.28316), m: 1, 
          isFixed: vec2(false, false), rad: 0.1});
   e.addForce(new GravityForce(0.000118419, 1, 0));
-
+  e.addEdge(new Edge(EDGE_TYPE.GRAVITY, 0, 1));
+  
   e.add({x: vec2(2, 4), v: vec2(0,-1), m: 1, 
          isFixed: vec2(false, false), rad: 0.2});
   e.add({x: vec2(4, 4), v: vec2(0, 1), m: 1, 
          isFixed: vec2(false, false), rad: 0.2});
   e.addForce(new GravityForce(4, 2, 3));
+  e.addEdge(new Edge(EDGE_TYPE.GRAVITY, 2, 3));
+  
 }

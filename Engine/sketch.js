@@ -1,5 +1,5 @@
 // Number of pixels per meter
-METERS = 50; 
+METERS = 70
 // Size of our canvas
 SCENE_WIDTH = 600; 
 SCENE_HEIGHT = 400; 
@@ -10,8 +10,8 @@ let e = new Engine2D(s, r);
 
 function setup() {
   createCanvas(SCENE_WIDTH, SCENE_HEIGHT);
-  SimpleGravity(e)
-  // OrbitTest(e);
+  // SimpleGravity(e)
+  OrbitTest(e);
 }
 
 function draw() {

@@ -14,15 +14,15 @@ let mult = p5.Vector.mult;
 
 class SimpleGravityForce {
   constructor(g0, g1) {
-  	this.g = createVector(g0, g1);
+    this.g = createVector(g0, g1);
   }
   // Add the force to be applied to each particle to the res array,
   // by equation F = mg
   applyForce(x, v, m, nParticles, res) {
-  	for (let i = 0; i < nParticles; i++) {
-  		res[i].x += (m[i] * this.g.x);
-  		res[i].y += (m[i] * this.g.y);
-  	}
+    for (let i = 0; i < nParticles; i++) {
+      res[i].x += (m[i] * this.g.x);
+      res[i].y += (m[i] * this.g.y);
+    }
   }
 
   // Compute the total potential energy of particles by U(x) = -mgx
@@ -38,7 +38,7 @@ class SimpleGravityForce {
 
 class GravityForce {
   constructor(G, i, j) {
-  	this.G = G;
+    this.G = G;
     this.i = i;
     this.j = j;
   }
