@@ -22,8 +22,7 @@ class Engine2D {
     let rad = p.rad !== undefined ? p.rad : 0.1;
     let col = p.col !== undefined ? p.col : randColor();
     let trailDur = p.trailDur !== undefined ? p.trailDur : 1;
-    let trailCol = p.trailCol !== undefined ? p.trailCol : col;
-
+    let trailCol = p.trailCol !== undefined ? p.trailCol : color(col.levels[0], col.levels[1], col.levels[2]);
     s.add(x.x, x.y, v.x, v.y, m, isFixed.x, isFixed.y, rad);
     r.add(rad, col, trailDur, trailCol);
   }

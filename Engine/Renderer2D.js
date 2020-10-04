@@ -123,11 +123,16 @@ class Renderer2D {
       ellipse(pX(xi.x), pY(xi.y), lX(ri), lY(ri));
       // Store this info for the trail
       if (this.trailDurs[i] != 0) {
-        // Store new position
-        this.trails[i].enqueue(new PosInfo(
-          currTime, 
-          createVector(xi.x, xi.y)
-        ));
+        // Store new position if it's far away enough in time.
+        // We don't want to store more than 30 previous positions.
+        const num = this.trails[i].getLength();
+        const offset = this.trails[i].getOffset();
+        const queue = this.trails[i].getQ();
+        if (num == 0 || currTime - queue[offset+num-1].t >= this.trailDurs[i] *33)
+          this.trails[i].enqueue(new PosInfo(
+            currTime, 
+            createVector(xi.x, xi.y)
+          ));
         // Clear expired trails
         while (this.trails[i].getLength() > 0 &&
                this.trails[i].peek().t < currTime - this.trailDurs[i]*1000) {
