@@ -19,8 +19,8 @@ function ExplicitEuler(s, dt) {
     // Update velocity by all forces with v = v0 + M^(-1) * f * dt,
     // unless the axis is fixed
     s.setV(i,
-      vi.x + (fixedi.x ? 0 : dt / mi.x * f[i].x),
-      vi.y + (fixedi.y ? 0 : dt / mi.y * f[i].y)
+      vi.x + (fixedi.x ? 0 : dt / mi * f[i].x),
+      vi.y + (fixedi.y ? 0 : dt / mi * f[i].y)
     );
   }
 }
@@ -40,8 +40,8 @@ function SymplecticEuler(s, dt) {
     // Update velocity by all forces with v = v0 + M^(-1) * f * dt,
     // unless the axis is fixed
     s.setV(i,
-      vi.x + (fixedi.x ? 0 : dt / mi.x * f[i].x),
-      vi.y + (fixedi.y ? 0 : dt / mi.y * f[i].y)
+      vi.x + (fixedi.x ? 0 : dt / mi * f[i].x),
+      vi.y + (fixedi.y ? 0 : dt / mi * f[i].y)
     );
 
     // Update position with x = x0 + v0 * dt 

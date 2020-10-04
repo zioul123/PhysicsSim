@@ -1,33 +1,44 @@
-// The class that contains all scene information
+// The class that contains all scene information related to
+// physics simulation of 2D particles.
 class Scene2D {
   constructor(stepFunction) {
-    // Particle positions, velocities, masses, and whether they're affected by forces.
-    // Stored as an array of 2D vectors
-    this.x = [];
-    this.v = [];
+    // Pos, vel, and fixed are stored as an array of 2D vectors
+    
+    // [x, y] positions
+    this.x = []; 
+    // [x, y] velocities
+    this.v = []; 
+    // whether x/y velocities are unaffected ny forces
+    this.fixed = []; 
+    
+    // m and radii are an array of scalars.
+    
+    // masses of the particles
     this.m = [];
-    this.fixed = [];
-    // Particle properties
+    // radii of the particles
     this.radii = [];
-    // All forces in the scene
+    
+    // All forces in the scene. This is an array of objects.
     this.forces = [];
+    
     // Total number of particles and forces in the scene
     this.nParticles = 0;
     this.nForces = 0;
-    // The step function
+    
+    // The step function used to forward the scene
     this.stepFunction = stepFunction;
   }
 
   // =======
   // Fillers
   // =======
-  add(x0, x1, v0, v1, m0, m1,
-    isFixed0, isFixed1, rad0, rad1) {
+  add(x0, x1, v0, v1, m,
+    isFixed0, isFixed1, rad) {
     this.x.push(createVector(x0, x1));
     this.v.push(createVector(v0, v1));
-    this.m.push(createVector(m0, m1));
-    this.radii.push(createVector(rad0, rad1));
     this.fixed.push(createVector(isFixed0, isFixed1));
+    this.m.push(m);
+    this.radii.push(rad);
     this.nParticles++;
   }
 
@@ -50,10 +61,9 @@ class Scene2D {
     this.v[i].x = v0;
     this.v[i].y = v1;
   }
-  // Sets the mass of particle i to (m0, m1)
-  setM(i, m0, m1) {
-    this.m[i].x = m0;
-    this.m[i].y = m1;
+  // Sets the mass of particle i to m
+  setM(i, m) {
+    this.m[i] = m;
   }
   // Sets the fixed status of particle i to (fixed0, fixed1)
   setFixed(i, fixed0, fixed1) {
@@ -81,7 +91,7 @@ class Scene2D {
   getFixed(i) {
     return this.fixed[i];
   }
-  // Get the ith particle's radii
+  // Get the ith particle's radius
   getRadii(i) {
     return this.radii[i];
   }
@@ -94,8 +104,8 @@ class Scene2D {
       let vi = this.getV(i);
       let mi = this.getM(i);
       // Add to the total KE
-      totalKE += 1 / 2 * (mi.x * vi.x * vi.x +
-        mi.y * vi.y * vi.y);
+      totalKE += 1 / 2 * (mi * vi.x * vi.x +
+        mi * vi.y * vi.y);
     }
     return totalKE;
   }

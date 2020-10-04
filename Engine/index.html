@@ -6,9 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>p5.js example</title>
   <style>
+    html, body {
+      height: 100%;
+    }
     body {
-      padding: 0;
       margin: 0;
+      display: flex;
+
+      /* This centers our sketch horizontally. */
+      justify-content: center;
+
+      /* This centers our sketch vertically. */
+      align-items: center;
     }
   </style>
   <script src="../p5.js"></script>
@@ -16,8 +25,9 @@
   <script src="Forces.js"></script>
   <script src="Stepper.js"></script>
   <script src="Scene2D.js"></script>
+  <script src="Renderer2D.js"></script>
+  <script src="Engine2D.js"></script>
   <script src="SceneTests.js"></script>
-  <!--   <script src="Renderer2D.js"></script> -->
   <script src="sketch.js"></script>
 </head>
 
