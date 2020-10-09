@@ -13,28 +13,28 @@ class Engine2D {
                                   170 + random(86), 
                                   170 + random(86));
 
-    // Extract the given parameters
+    // Extract the given parameters. This is definitely not idiomatic js.
     let x = p.x !== undefined ? p.x : vec2(r.pixToM * r.w / 2,
       r.pixToM * r.h / 2);
     let v = p.v !== undefined ? p.v : vec2(0, 0);
     let m = p.m !== undefined ? p.m : 1;
-    let isFixed = p.isFixed !== undefined ? p.isFixed : false;
     let rad = p.rad !== undefined ? p.rad : 0.1;
     let col = p.col !== undefined ? p.col : randColor();
+    let isFixed = p.isFixed !== undefined ? p.isFixed : false;
     let trailDur = p.trailDur !== undefined ? p.trailDur : 1;
     let trailCol = p.trailCol !== undefined ? p.trailCol : color(col.levels[0], col.levels[1], col.levels[2]);
-    s.add(x.x, x.y, v.x, v.y, m, isFixed.x, isFixed.y, rad);
-    r.add(rad, col, trailDur, trailCol);
+    this.s.add(x.x, x.y, v.x, v.y, m, isFixed.x, isFixed.y, rad);
+    this.r.add(rad, col, trailDur, trailCol);
   }
   
   // Add the force to the scene
   addForce(f) {
-    s.addForce(f);
+    this.s.addForce(f);
   }
   
   // Add edge to be drawn
   addEdge(e) {
-    r.addEdge(e);
+    this.r.addEdge(e);
   }
   
   // Draw the scene, store extra information
@@ -42,14 +42,19 @@ class Engine2D {
     // Background color
     background(110);
     // Draw scale
-    r.drawMeterGrid();
+    this.r.drawMeterGrid();
     // Draw trails
-    r.drawAllTrails();
+    this.r.drawAllTrails();
     // Draw edges
-    r.drawAllEdges(s);
+    this.r.drawAllEdges(s);
     // Draw all particles
-    r.drawAllParticles(s);
-    // Step the scene fprward
-    s.stepScene(min(deltaTime / 1000, 0.2));
+    this.r.drawAllParticles(s);
+    // Step the scene forward
+    this.s.stepScene(min(deltaTime / 1000, 0.02));
+  }
+  
+  // Handle rescaling of the render
+  rescale(w, h, meters, offX, offY) {
+    this.r.rescale(w, h, meters, offX, offY);
   }
 }

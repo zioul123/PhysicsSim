@@ -4,10 +4,14 @@ class Scene2D {
   constructor(stepFunction) {
     // Pos, vel, and fixed are stored as an array of 2D vectors
     
+    // We have two copies of x and v - the current and the initial.
+    // We store the initial values so we can restart the simulation
     // [x, y] positions
     this.x = []; 
+    this.init_x = []; 
     // [x, y] velocities
     this.v = []; 
+    this.init_v = []; 
     // whether x/y velocities are unaffected ny forces
     this.fixed = []; 
     
@@ -36,6 +40,8 @@ class Scene2D {
     isFixed0, isFixed1, rad) {
     this.x.push(createVector(x0, x1));
     this.v.push(createVector(v0, v1));
+    this.init_x.push(createVector(x0, x1));
+    this.init_v.push(createVector(v0, v1));
     this.fixed.push(createVector(isFixed0, isFixed1));
     this.m.push(m);
     this.radii.push(rad);

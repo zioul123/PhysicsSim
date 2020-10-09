@@ -33,17 +33,29 @@ class Renderer2D {
     this.nEdges = 0;
     // Used to store trail information
     this.trails = [];
-    // Store screen size and pixel size
+    // Store screen size and pixel size, and init screen location
     this.h = h;
     this.w = w;
     this.meters = meters;
     this.pixToM = 1 / meters;
+    this.offX = 0;
+    this.offY = 0;
     // Used when defining scene positions with metric positions
-    this.pX = x => x * meters;
-    this.pY = y => h - (y * meters) - 1
+    this.pX = x => x * this.meters + this.offX;
+    this.pY = y => this.h - (y * this.meters) - 1 + this.offY;
     // Used when defining scene lengths with metric positions
-    this.lX = x => x * meters;
-    this.lY = y => y * meters;
+    this.lX = x => x * this.meters;
+    this.lY = y => y * this.meters;
+  }
+  
+  // Handle rescaling of the render
+  rescale(w, h, meters, offX, offY) {
+    this.h = h;
+    this.w = w;
+    this.meters = meters;
+    this.pixToM = 1 / meters;
+    this.offX = offX;
+    this.offY = offY;
   }
   
   // Add a particle for rendering, and initialize its trail.
@@ -155,19 +167,22 @@ class Renderer2D {
     stroke(color(255, 255, 255));
     fill(color(255, 255, 255));
     // Vertical lines
-    for (let i = 0; lX(i) < SCENE_WIDTH; i += 1) {
+    for (let i = -ceil(this.pixToM * this.offX); lX(i) + this.offX < this.w; i += 1) {
+      // console.log(i);
       strokeWeight(0.5);
-      line(pX(i), pY(0), pX(i), pY(SCENE_HEIGHT));
+      line(pX(i), pY(0), pX(i), pY(this.h));
       strokeWeight(0);
-      text(i, 3 + pX(i), pY(0));
+      text(i, 3 + pX(i), this.h- 1);
     }
+    
     // Horizontal lines
-    for (let i = 0; lY(i) < SCENE_HEIGHT; i += 1) {
+    for (let i = ceil(this.pixToM * this.offY); lY(i) - this.offY < this.h; i += 1) {
       strokeWeight(0.5);
       // Line is a bit biased, hence the +1
-      line(pX(0), pY(i) + 1, pX(SCENE_WIDTH), pY(i) + 1);
+      line(pX(0), pY(i) + 1, pX(this.w), pY(i) + 1);
       strokeWeight(0);
-      if (i != 0) text(i, 3 + pX(0), pY(i));
+      // Cut off so as not to overlap x-axis text
+      if (pY(i) < this.h - 12) text(i, 3, pY(i));
     }
     
     pop();
