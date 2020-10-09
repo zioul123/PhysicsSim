@@ -5,13 +5,16 @@ class Engine2D {
     this.s = s;
     // A Renderer
     this.r = r;
+    // Play state
+    this.isPlaying = true;
+
   }
   // Used to populate the scene/renderer particle lists
   add(p) {
     const vec2 = createVector;
-    const randColor = () => color(170 + random(86), 
-                                  170 + random(86), 
-                                  170 + random(86));
+    const randColor = () => color(170 + random(86),
+      170 + random(86),
+      170 + random(86));
 
     // Extract the given parameters. This is definitely not idiomatic js.
     let x = p.x !== undefined ? p.x : vec2(r.pixToM * r.w / 2,
@@ -26,17 +29,17 @@ class Engine2D {
     this.s.add(x.x, x.y, v.x, v.y, m, isFixed.x, isFixed.y, rad);
     this.r.add(rad, col, trailDur, trailCol);
   }
-  
+
   // Add the force to the scene
   addForce(f) {
     this.s.addForce(f);
   }
-  
+
   // Add edge to be drawn
   addEdge(e) {
     this.r.addEdge(e);
   }
-  
+
   // Draw the scene, store extra information
   draw() {
     // Background color
@@ -44,17 +47,31 @@ class Engine2D {
     // Draw scale
     this.r.drawMeterGrid();
     // Draw trails
-    this.r.drawAllTrails();
+    this.r.drawAllTrails(s);
     // Draw edges
     this.r.drawAllEdges(s);
     // Draw all particles
     this.r.drawAllParticles(s);
-    // Step the scene forward
-    this.s.stepScene(min(deltaTime / 1000, 0.02));
+    if (this.isPlaying) {
+      // Step the scene forward
+      this.s.stepScene(min(deltaTime / 1000, 0.02));
+    }
   }
-  
+
   // Handle rescaling of the render
   rescale(w, h, meters, offX, offY) {
     this.r.rescale(w, h, meters, offX, offY);
+  }
+
+  // Play/pause the scene
+  togglePlay() {
+    this.isPlaying = !this.isPlaying;
+    this.r.isPlaying = this.isPlaying;
+  }
+  // Reset the scene
+  resetScene() {
+    this.isPlaying = false;
+    this.s.resetScene();
+    this.r.resetTrails();
   }
 }

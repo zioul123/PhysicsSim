@@ -97,9 +97,11 @@ function setup() {
   panelXY = { x: cX, y: cY };
   btnPlay = createButton('Play');
   btnPlay.position(cX, cY);
+  btnPlay.mousePressed(() => e.togglePlay());
   panelXY.x = btnPlay.position().x + btnPlay.size().width;
   btnReset = createButton('Reset');
   btnReset.position(panelXY.x, panelXY.y);
+  btnReset.mousePressed(() => e.resetScene());
 
   sliderScale = createSlider(30, 200, 70);
   sliderScale.position(cX + SCENE_WIDTH - 1 - sliderScale.size().width - 10, cY);

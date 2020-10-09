@@ -3,32 +3,32 @@
 class Scene2D {
   constructor(stepFunction) {
     // Pos, vel, and fixed are stored as an array of 2D vectors
-    
+
     // We have two copies of x and v - the current and the initial.
     // We store the initial values so we can restart the simulation
     // [x, y] positions
-    this.x = []; 
-    this.init_x = []; 
+    this.x = [];
+    this.init_x = [];
     // [x, y] velocities
-    this.v = []; 
-    this.init_v = []; 
+    this.v = [];
+    this.init_v = [];
     // whether x/y velocities are unaffected ny forces
-    this.fixed = []; 
-    
+    this.fixed = [];
+
     // m and radii are an array of scalars.
-    
+
     // masses of the particles
     this.m = [];
     // radii of the particles
     this.radii = [];
-    
+
     // All forces in the scene. This is an array of objects.
     this.forces = [];
-    
+
     // Total number of particles and forces in the scene
     this.nParticles = 0;
     this.nForces = 0;
-    
+
     // The step function used to forward the scene
     this.stepFunction = stepFunction;
   }
@@ -136,5 +136,15 @@ class Scene2D {
 
   stepScene(dt) {
     this.stepFunction(this, dt);
+  }
+
+  // Reset the scene to initial
+  resetScene() {
+    for (let i = 0; i < this.x.length; i++) {
+      this.x[i].x = this.init_x[i].x;
+      this.x[i].y = this.init_x[i].y;
+      this.v[i].x = this.init_v[i].x;
+      this.v[i].y = this.init_v[i].y;
+    }
   }
 }

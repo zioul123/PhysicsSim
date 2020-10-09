@@ -46,6 +46,8 @@ class Renderer2D {
     // Used when defining scene lengths with metric positions
     this.lX = x => x * this.meters;
     this.lY = y => y * this.meters;
+    // Used to pause trail updates
+    this.isPlaying = true;
   }
   
   // Handle rescaling of the render
@@ -92,7 +94,7 @@ class Renderer2D {
   }
   
   // Draw particle trails
-  drawAllTrails() {
+  drawAllTrails(s) {
     push()
     strokeWeight(0.5);
     for (let i = 0; i < this.trails.length; i++) {
@@ -102,6 +104,16 @@ class Renderer2D {
       const col = this.trailCols[i];
       
       stroke(this.trailCols[i]);
+      // First draw the head of the trail, since the current pos might
+      // not be part of the trail
+      col.setAlpha(255);
+      stroke(col);
+      if (num > 0)
+        line(this.pX(queue[offset + num - 1].x.x), 
+             this.pY(queue[offset + num - 1].x.y),
+             this.pX(s.getX(i).x), 
+             this.pY(s.getX(i).y))
+      // Draw the rest
       for (let j = 0; j < num-1; j++) {
         col.setAlpha(j / num * 255)
         stroke(col);
@@ -133,28 +145,48 @@ class Renderer2D {
       let ri = this.radii[i];
       let xi = s.getX(i);
       ellipse(pX(xi.x), pY(xi.y), lX(ri), lY(ri));
+      
       // Store this info for the trail
       if (this.trailDurs[i] != 0) {
-        // Store new position if it's far away enough in time.
-        // We don't want to store more than 30 previous positions.
-        const num = this.trails[i].getLength();
-        const offset = this.trails[i].getOffset();
-        const queue = this.trails[i].getQ();
-        if (num == 0 || currTime - queue[offset+num-1].t >= this.trailDurs[i] *33)
-          this.trails[i].enqueue(new PosInfo(
-            currTime, 
-            createVector(xi.x, xi.y)
-          ));
-        // Clear expired trails
-        while (this.trails[i].getLength() > 0 &&
-               this.trails[i].peek().t < currTime - this.trailDurs[i]*1000) {
-          this.trails[i].dequeue();
+        // Update trail "properly" if playing
+        if (this.isPlaying) {
+          // Store new position if it's far away enough in time.
+          // We don't want to store more than 30 previous positions.
+          const num = this.trails[i].getLength();
+          const offset = this.trails[i].getOffset();
+          const queue = this.trails[i].getQ();
+          if (num == 0 || currTime - queue[offset+num-1].t >= this.trailDurs[i] * 33)
+            this.trails[i].enqueue(new PosInfo(
+              currTime, 
+              createVector(xi.x, xi.y)
+            ));
+          // Clear expired trails
+          while (this.trails[i].getLength() > 0 &&
+                 this.trails[i].peek().t < currTime - this.trailDurs[i]*1000) {
+            this.trails[i].dequeue();
+          }
+        } 
+        // If scene is paused, we just keep pushing the trail's time into the future
+        else {
+          const num = this.trails[i].getLength();
+          const offset = this.trails[i].getOffset();
+          const queue = this.trails[i].getQ();
+          for (let i = 0; i < num; i++) {
+            queue[offset + i].t += deltaTime;
+          }
         }
       }
     }
     pop();
   }
 
+  // Clear the trails when scene is reset
+  resetTrails() {
+    for (let i = 0; i < s.nParticles; i++) {
+      this.trails[i] = new Queue();
+    }
+  }
+  
   // Draws "graph paper lines" for scale
   drawMeterGrid() {
     // Aliases
